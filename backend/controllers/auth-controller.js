@@ -22,7 +22,7 @@ export const signin = async (req, res, next) => {
         const user = await User.findOne({email});
         if (!user) return next(errorHandler(404, 'User not found!'));
         const passwordIsValid = bcrypt.compareSync(password, user.password);
-        if (!passwordIsValid) return next(errorHandler(401, 'Invalid password!'));
+        if (!passwordIsValid) return next(errorHandler(401, 'Invalid credentials!'));
         // used jwt to create a token and set it as a cookie
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
         // passed the rest spread operator to remove the password from the user object

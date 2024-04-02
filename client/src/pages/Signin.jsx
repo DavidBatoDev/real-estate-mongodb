@@ -1,14 +1,21 @@
 import {useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { 
+  signInStart, 
+  signInSuccess, 
+  signInFail 
+} from '../redux/user/userSlice'
 
 const Signin = () => {
-  const navigate = useNavigate()
   const [formBody, setFormBody] = useState({
     email: '',
     password: ''
   })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const {loading, error} = useSelector(state => state.user)
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleChange = e => {
     setFormBody({
@@ -21,7 +28,7 @@ const Signin = () => {
     e.preventDefault()
     try {
       // Fetching data from the backend
-      setLoading(true)
+      dispatch(signInStart())
       const res = await fetch('/api/auth/signin', {
         method: "POST",
         headers: {
@@ -32,16 +39,14 @@ const Signin = () => {
       // Parsing the response
       const data = await res.json()
       if (data.success === false) {
-        setError(data.message)
-        setLoading(false)
+        dispatch(signInFail(data.message))
         return
       }
-      setLoading(false)
-      setError('')
+      dispatch(signInSuccess(data))
       navigate('/') // Redirect to the home page
 
     } catch (error) {
-      setLoading(false)
+      dispatch(signInFail(error.message))
       console.log(error.message)
     }
   }
@@ -66,8 +71,8 @@ const Signin = () => {
           placeholder="Password" 
           className='p-3 border-2 shadow-md
           rounded-lg outline-none' />
-        <button type='submit' className='text-white hover:bg-orange-500 bg-orange-400 p-3 rounded-lg shadow-md'>
-          Sign In
+        <button type='submit' disabled={loading} className='text-white hover:bg-orange-500 bg-orange-400 p-3 rounded-lg shadow-md'>
+          {loading ? 'Loading...' : 'Sign In'}
         </button>
         <button className="hover:bg-slate-200 border border-black p-3 rounded-lg shadow-md">
           Sign In with Google
