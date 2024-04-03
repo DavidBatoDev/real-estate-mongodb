@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import OAuth from '../components/OAuth'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { 
@@ -73,9 +74,7 @@ const Signin = () => {
         <button type='submit' disabled={loading} className='text-white hover:bg-orange-500 bg-orange-400 p-3 rounded-lg shadow-md'>
           {loading ? 'Loading...' : 'Sign In'}
         </button>
-        <button className="hover:bg-slate-200 border border-black p-3 rounded-lg shadow-md">
-          Sign In with Google
-        </button>
+        <OAuth />
       </form>
       <div className='mt-5'>Don't have an account?
         <Link to={'/signup'}>

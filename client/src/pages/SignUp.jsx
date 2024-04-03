@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import OAuth from '../components/OAuth'
 import { Link, useNavigate } from 'react-router-dom'
 
 const SignUp = () => {
@@ -70,9 +71,7 @@ const SignUp = () => {
           className={`text-white hover:bg-orange-500 bg-orange-400 p-3 rounded-lg shadow-md ${loading && 'bg-black'}`}>
           {loading ? 'Loading...' : 'Sign Up'}
         </button>
-        <button className="hover:bg-slate-100 border border-black p-3 rounded-lg shadow-md">
-          Sign Up with Google
-        </button>
+        <OAuth />
       </form>
       <div className='mt-5'>Have an account?
         <Link to={'/signin'}>

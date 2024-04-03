@@ -23,14 +23,43 @@ export const signin = async (req, res, next) => {
         if (!user) return next(errorHandler(404, 'User not found!'));
         const passwordIsValid = bcrypt.compareSync(password, user.password);
         if (!passwordIsValid) return next(errorHandler(401, 'Invalid credentials!'));
-        // used jwt to create a token and set it as a cookie
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
-        // passed the rest spread operator to remove the password from the user object
         const { password: pass , ...rest} = user._doc
-        // set the token as a cookie and send the user object as a response
         res.cookie('access_token', token, {
             httpOnly: true,
         }).status(200).json(rest);
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const google = async (req, res, next) => {
+    const {name, email, photo} = req.body;
+    try {
+        const user = await User.findOne({email: email})
+        console.log(user)
+        if (user) {
+            const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+            const {password: pass, ...rest} = user._doc
+            console.log(rest)
+            res.cookie('access_token', token, {httpOnly: true})
+                .status(200).json(rest)
+        } else {
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)
+            const hashedPassword = bcrypt.hashSync(generatedPassword, 10)
+            const newUser = new User({
+                username: name.split(' ').join("").toLowerCase() + Math.random().toString(36).slice(-4), 
+                email: email, 
+                password:hashedPassword,
+                avatar: photo
+            })
+            await newUser.save()
+            const token = sign({id: newUser._id}, process.env.JWT_SECRET)
+            const {password: password, ...rest} = newUser._doc
+            console.log(rest)
+            res.cookie('access_token', token, {httpOnly: true})
+                .status(200).json(rest)
+        }
     } catch (error) {
         next(error);
     }
