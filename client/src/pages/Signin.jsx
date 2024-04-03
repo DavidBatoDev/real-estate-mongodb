@@ -44,7 +44,6 @@ const Signin = () => {
       }
       dispatch(signInSuccess(data))
       navigate('/') // Redirect to the home page
-
     } catch (error) {
       dispatch(signInFail(error.message))
       console.log(error.message)
