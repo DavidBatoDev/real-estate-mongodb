@@ -8,6 +8,7 @@ import Signin from './pages/Signin'
 import SignUp from './pages/SignUp'
 import Profile from './pages/Profile'
 import Header from './components/Header'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
@@ -19,7 +20,9 @@ function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Routes>
     </Router>
   )
