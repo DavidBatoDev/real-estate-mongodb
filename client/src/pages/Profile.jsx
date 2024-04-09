@@ -1,6 +1,7 @@
 import React, {useState, useEffect ,useRef} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { app } from '../firebase'
+import { Link } from 'react-router-dom'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { FaEdit } from 'react-icons/fa'
 import { updateUserStart, updateUserSuccess, updateUserFail } from '../redux/user/userSlice'
@@ -185,12 +186,18 @@ const Profile = () => {
       </button>
       </form>
       {/* From Update */}
+      <Link to={"/create-listing"}>
+        <button className='mt-4 bg-green-500 p-3 cursor-pointer text-white rounded-lg w-full'>
+          CREATE LISTING
+        </button>
+      </Link>
       <div className='flex justify-between my-2 text-red-700 font-semibold'>
         <span onClick={() => setDeleteModal(true)} className='cursor-pointer'>Delete Account</span>
         <span onClick={handleSignOut} className='cursor-pointer'>Sign-Out</span>
       </div>
+
       {error && <div className='text-red-500 text-center mt-3'>{error}</div>}
-      {updateSuccess && <div className='text-green-500 text-center mt-3'>{updateSuccess}</div>}
+      {updateSuccess && <div className='hover:opacity-95 text-green-500 text-center mt-3'>{updateSuccess}</div>}
     </div>
   )
 }
