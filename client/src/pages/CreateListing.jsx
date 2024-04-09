@@ -1,6 +1,81 @@
-import React from 'react'
+import {useState} from 'react'
+import { app } from '../firebase'
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { FaTrash, FaImages } from 'react-icons/fa'
+import { set } from 'mongoose'
 
 const CreateListing = () => {
+    const [images, setImages] = useState([])
+    const [formBody, setFormBody] = useState({
+        name: '',
+        description: '',
+        address: '',
+        sale: false,
+        rent: false,
+        parking: false,
+        furnished: false,
+        offer: false,
+        bedrooms: 0,
+        bathrooms: 0,
+        regularPrice: 0,
+        discountedPrice: 0,
+        imageUrls: []
+    })
+    const [loading, setLoading] = useState(false)
+    const [imageUploadError, setImageUploadError] = useState(null)
+
+    const handleImageSubmit = (e) => {
+        if (images.length === 0) {
+            setImageUploadError('Please select images to upload')
+            setImages([])
+        }
+        else if (images.length > 6 || formBody.imageUrls.length + images.length > 6) {
+            setImageUploadError('You can only upload 6 images')
+            setImages([])
+        } else {
+            setLoading(true)
+            const promises = []
+            for (let i = 0; i < images.length; i++) {
+               promises.push(storeImage(images[i]))
+            }
+            Promise.all(promises)
+            .then((urls) => {
+                setFormBody({...formBody, imageUrls: formBody.imageUrls.concat(urls)})
+                setImageUploadError(null)
+                setLoading(false)
+            })
+            setImages([])
+        }
+    }
+
+    const storeImage = async (file) => {
+        return new Promise((resolve, reject) => {
+            const storage = getStorage(app)
+            const fileName = new Date().getTime() + file.name
+            const storageRef = ref(storage, fileName)
+            const uploadTask = uploadBytesResumable(storageRef, file)
+            uploadTask.on('state_changed', (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                console.log('Upload is ' + progress + '% done');
+            },
+            (error) => {
+                reject(error)
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref)
+                .then((downloadURL) => {
+                    resolve(downloadURL)
+                })
+            }
+            )
+        })
+    }
+
+    const handleRemoveImage = (index) => {
+        setFormBody({...formBody, imageUrls: formBody.imageUrls.filter((img, i) => i !== index)})
+    }
+
+    console.log(formBody.imageUrls)
   return (
     <main className='p-3 max-w-4xl mx-auto'>
         <h1 className='text-3xl font-bold text-center my-7'>Create a Listing</h1>
@@ -74,17 +149,39 @@ const CreateListing = () => {
                     <span className='font-bold text-black'>Images: </span>The first image will be the cover (max 6)
                 </p>
                 <div className='flex gap-2'>
-                    <div className='border border-gray-400 rounded p-3'>
-                        <input type="file" accept='image/*' multiple name='imageUrls' 
+                    <div className='border cursor-pointer hover:bg-gray-600 hover:text-white border-gray-400 rounded p-3'>
+                        <label htmlFor="imageUrls" className='cursor-pointer flex items-center gap-2'>
+                            <FaImages /> {images.length > 0 ? `${images.length} IMAGES SELECTED` : 'SELECT IMAGES'}
+                        </label>
+                        <input id='imageUrls' onChange={e => setImages(e.target.files)} hidden type="file" accept='image/*' multiple name='imageUrls' 
                         className='flex-[2] max-w-48' />
                     </div>
-                    <button className='flex-[1] rounded border-orange-500 border p-3 text-orange-500'>
-                        UPLOAD
+                    <button type='button' onClick={handleImageSubmit} className='hover:bg-orange-500 hover:text-white flex-[1] rounded border-orange-500 border p-3 text-orange-500'>
+                        {loading ? 'UPLOADING...' : 'UPLOAD'}
                     </button>
                 </div>
+                {formBody.imageUrls.length > 0 && (
+                <div className='grid grid-cols-3 gap-2'>
+                    {formBody.imageUrls.map((image, index) => (
+                        <div key={image} className='relative border border-black'>
+                            <img src={image}
+                            alt={`image${index}`}
+                            className='h-20 w-32 object-contain' />
+                            <div className='flex justify-center items-center absolute right-1 top-1 bg-white rounded-full w-6 h-6'>
+                                <FaTrash onClick={
+                                    () => handleRemoveImage(index)
+                                } className='text-red-500 cursor-pointer'/>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                )}
                 <button className='hover:bg-orange-400 rounded p-3 text-white bg-orange-500'>
                     CREATE LISTING
                 </button>
+                <p className='text-red-700'>
+                    {imageUploadError && imageUploadError}
+                </p>
             </div>
         </form>
     </main>
