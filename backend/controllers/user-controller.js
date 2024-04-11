@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { errorHandler } from '../utils/error.js';
 import User from '../models/user-model.js';
+import Listing from '../models/listing-model.js';
 
 export const testUser = (req, res, next) => {
     res.send('User route works!');
@@ -38,6 +39,19 @@ export const deleteUser = async (req, res, next) => {
     try {
         await User.findByIdAndDelete(req.params.id)
         res.status(200).json('User deleted!')
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getUserListings = async (req, res, next) => {
+    const userId = req.params.userId
+    if (req.user.id !== userId) {
+        return next(errorHandler(401, 'Unauthorized'));
+    }
+    try {
+        const userListing = await Listing.find({userRef: userId})
+        res.status(200).json(userListing)
     } catch (error) {
         next(error)
     }
