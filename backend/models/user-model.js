@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: "https://www.clipartkey.com/mpngs/m/152-1520367_user-profile-default-image-png-clipart-png-download.png"
+        default: "https://clipground.com/images/profile-png-5.png"
     }
 }, {timestamps: true});
 
