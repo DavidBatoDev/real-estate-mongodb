@@ -47,3 +47,17 @@
             next(error)
         }
     }
+
+    export const getListing = async (req, res, next) => {
+        const id = req.params.id
+        try {
+            const listing = await Listing.findById(id)
+            if (listing.userRef !== req.user.id) return next(errorHandler(401, 'Unauthorized'))
+            if (!listing) {
+                return next(errorHandler(404, 'Listing not found'))
+            }
+            res.status(200).json(listing)
+        } catch (error) {
+            next(error)
+        }
+    }

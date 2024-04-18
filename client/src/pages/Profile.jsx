@@ -6,7 +6,6 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { FaEdit, FaPlus, FaTimes } from 'react-icons/fa'
 import { updateUserStart, updateUserSuccess, updateUserFail } from '../redux/user/userSlice'
 import { useNavigate } from 'react-router-dom'
-import { set } from 'mongoose'
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -240,31 +239,34 @@ const Profile = () => {
       {showListing && (
       <>
       <div className='h-max flex flex-col items-center gap-4'>
-        {listing.length === 0 && (
-          <div className='mt-10 flex flex-col gap-4 items-center'>
+        {listing.length === 0 ? (
+          <div className='flex flex-col gap-4 items-center'>
             <p className='my-5 text-center text-2xl font-semibold'>You have no listing yet</p>
             <Link to='/create-listing'>
               <button className='bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg'>Create Listing</button>
             </Link>
           </div>
-        
-        )}
+        )
+      :
+      <>
+        <p className='my-5 text-center text-2xl font-semibold'>Your Listings</p>
         {listing.map((item, index) => (
-          <>
-          <p className='my-5 text-center text-2xl font-semibold'>Your Listings</p>
           <div key={index} className='cursor-pointer flex items-center w-full border shadow-md rounded-lg'>
             <Link className='flex items-center w-[85%]' to={`/listing/${item._id}`}>
               <img className='h-20 w-32 shadow-md object-contain' 
                 src={item.imageUrls[0]} alt="p" />
               <p className='ml-2 font-bold truncate'>{item.name}</p>
             </Link>
-            <div className='flex flex-col justify-around pr-2 border h-full p-2 w-20'>
+            <div className='flex flex-col justify-around items-center pr-2 border h-full p-2 w-20'>
               <button onClick={() => handleDeleteListing(item._id)} className='text-red-600 font-semibold'>DELETE</button>
+              <Link to={`/update-listing/${item._id}`}>
               <button className='text-green-500 font-semibold'>EDIT</button>
+              </Link>
             </div>
           </div>
-          </>
         ))}
+        </>
+      }
       </div>
       </>
       )}
