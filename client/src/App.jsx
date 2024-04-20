@@ -11,6 +11,7 @@ import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute'
 import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
+import Listing from './pages/Listing'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/listing/:listingId" element={<Listing />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-listing" element={<CreateListing />} />

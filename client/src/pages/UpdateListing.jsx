@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import { app } from '../firebase'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-import { FaTrash, FaImages } from 'react-icons/fa'
+import { FaTrash, FaImages, FaArrowLeft } from 'react-icons/fa'
 import {useSelector} from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -129,7 +129,8 @@ const UpdateListing = () => {
     }
 
   return (
-    <main className='p-3 max-w-4xl mx-auto'>
+    <main className='p-3 max-w-4xl mx-auto relative'>
+        <FaArrowLeft onClick={() => navigate('/profile')} className='absolute top-3 left-3 cursor-pointer text-2xl'/>
         <h1 className='text-3xl font-bold text-center my-7'>Update Listing</h1>
         <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-3'>
             <div className='flex flex-col gap-4 flex-[1]'>

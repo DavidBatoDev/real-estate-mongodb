@@ -120,7 +120,7 @@ const CreateListing = () => {
                 setLoading(false)
             }
             setLoading(false)
-            navigate('/profile')
+            navigate(`/listing/${data._id}`)
         } catch (error) {
             setError(error.message)
             setLoading(false)
