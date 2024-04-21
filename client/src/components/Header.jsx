@@ -30,7 +30,7 @@ const Header = () => {
                 {currentUser ? (
                     <img 
                     className='rounded-full h-7 w-7 object-cover' 
-                    src={currentUser.avatar} alt="profile" />
+                    src={currentUser?.avatar} alt="profile" />
                 ) : 
                     <button className='bg-orange-400 hover:bg-orange-500 text-white p-2 rounded-lg'>Sign In</button>
                 }

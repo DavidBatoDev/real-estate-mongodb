@@ -15,7 +15,6 @@ const Contact = ({ listing }) => {
                 if (data.success === false) {
                     return
                 }
-                console.log(data)
                 setLandlord(data)
             } catch (error) {
                 console.log(error)
@@ -23,8 +22,6 @@ const Contact = ({ listing }) => {
         }
         fetchLandlord()
     }, [listing.userRef])
-
-    console.log(landlord)
 
     return (
         <div className='flex flex-col gap-2'>
