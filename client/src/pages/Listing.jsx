@@ -13,9 +13,13 @@ import {
     FaMapMarker, 
     FaParking
 } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+import Contact from '../components/Contact';
 
 const Listing = () => {
     SwiperCore.use([Navigation])
+    const {currentUser} = useSelector(state => state.user)
+    const [contact, setContact] = useState(false)
     const [listing, setListing] = useState({})
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
@@ -66,6 +70,7 @@ const Listing = () => {
                 </Swiper>
             </div>
             )}
+            {!loading && (
             <div className='flex flex-col max-w-4xl mx-auto p-3 my-3 gap-4'>
                 <p className='flex-wrap text-2xl font-semibold'>
                     {listing.name}
@@ -118,7 +123,14 @@ const Listing = () => {
                         <span className='font-semibold'>{listing.furnishing ? "Furnished" : "Unfurnished"}</span>
                     </div>
                 </div>
+                {currentUser && listing.userRef !== currentUser._id && !contact && (
+                    <button onClick={() => setContact(true)} className='p-3 mt-5 bg-orange-500 text-red rounded text-white'>
+                        Contact Landlord
+                    </button>
+                )}
+                {contact && (<Contact listing={listing} />)}
             </div>
+            )}
         </main>
     )
 }
