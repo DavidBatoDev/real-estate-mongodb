@@ -45,8 +45,6 @@ const Listing = () => {
         fetchListing()
     }, [listingId])
 
-    console.log(listing)
-
     return (
         <main>
             {loading && (
