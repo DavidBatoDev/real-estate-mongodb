@@ -115,6 +115,7 @@ const Search = () => {
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('startIndex', startIndex)
         const searchQuery = urlParams.toString()
+        console.log(searchQuery)
         const res = await fetch(`/api/listing/get?${searchQuery}`)
         const data = await res.json()
         if (data.length < 9) {
@@ -221,7 +222,7 @@ const Search = () => {
       <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>
           Listing results:
         </h1>
-        <div className='p-7 flex flex-col flex-wrap gap-3 sm:flex-row'>
+        <div className='p-7 pb-3 flex flex-col flex-wrap gap-3 sm:flex-row'>
             {!loading && !error && listings.length === 0 && (
                 <p className='text-xl text-center font-semibold text-slate-700'>No listing found!</p>
             )}
@@ -237,12 +238,12 @@ const Search = () => {
                 listings.map((listing) => (
                 <ListingItem key={listing._id} listing={listing} />
             ))}
+        </div>
             {showMore && (
-                <button onClick={onShowMoreClick} className='text-orange-500 underline font-semibold hover:text-orange-400'>
+                <button onClick={onShowMoreClick} className='pl-10 pb-4 text-orange-500 underline font-semibold hover:text-orange-400'>
                     Show More
                 </button>
             )}
-        </div>
         {error && <p className='text-center text-2xl mt-20 font-semibold text-red-500'>{error}</p>}
       </div>
     </div>

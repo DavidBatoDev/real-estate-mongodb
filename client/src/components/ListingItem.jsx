@@ -3,7 +3,7 @@ import { MdLocationOn } from 'react-icons/md';
 
 export default function ListingItem({ listing }) {
   return (
-    <div className='sm:mx-3 bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]'>
+    <div className='sm:mx-3 bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[260px] md:w-[280px]'>
       <Link to={`/listing/${listing._id}`}>
         <img
           src={
@@ -18,7 +18,7 @@ export default function ListingItem({ listing }) {
             {listing.name}
           </p>
           <div className='flex items-center gap-1'>
-            <MdLocationOn className='h-4 w-4 text-green-700' />
+            <MdLocationOn className='h-4 w-4 text-orange-500' />
             <p className='text-sm text-gray-600 truncate w-full'>
               {listing.address}
             </p>

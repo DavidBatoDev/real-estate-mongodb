@@ -75,7 +75,7 @@ const Listing = () => {
                 </p>
                 <div className={`w-max relative mt-1`}>
                     <p className={`${!listing.offer && 'hidden'} 
-                        text-lg absolute top-[-20px] right-[55px] text-gray-500 font-light line-through`}>
+                        text-lg absolute top-[-20px] right-6 text-gray-500 font-light line-through`}>
                             ${listing.regularPrice}
                     </p>
                     <p className='text-2xl font-semibold relative'>
@@ -99,9 +99,9 @@ const Listing = () => {
                     </div>
                     )}
                 </div>
-                <div>
+                <div className='w-full'>
                     <p className='text-lg font-semibold'>Description</p>
-                    <p className='text-gray-500'>{listing.description}</p>
+                    <p className='text-gray-500 whitespace-normal break-words w-full'>{listing.description}</p>
                 </div>
                 <div className='flex gap-4 flex-wrap'>
                     <div className='flex gap-2 items-center'>
