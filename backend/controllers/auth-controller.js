@@ -23,7 +23,10 @@ export const signin = async (req, res, next) => {
         if (!user) return next(errorHandler(404, 'User not found!'));
         const passwordIsValid = bcrypt.compareSync(password, user.password);
         if (!passwordIsValid) return next(errorHandler(401, 'Invalid credentials!'));
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
+        const token = jwt.sign(
+            {id: user._id}, 
+            process.env.JWT_SECRET, 
+        );
         const { password: pass , ...rest} = user._doc
         res.cookie('access_token', token, {
             httpOnly: true,
@@ -54,7 +57,7 @@ export const google = async (req, res, next) => {
                 avatar: photo
             })
             await newUser.save()
-            const token = sign({id: newUser._id}, process.env.JWT_SECRET)
+            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET)
             const {password: password, ...rest} = newUser._doc
             console.log(rest)
             res.cookie('access_token', token, {httpOnly: true})
